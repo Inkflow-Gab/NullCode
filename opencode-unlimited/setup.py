@@ -1830,8 +1830,10 @@ def do_install():
 
     # Keep a copy of this script in BASE_DIR, the proxy commands need it there.
     local_copy = Path(__file__).resolve()
+    target = (BASE_DIR / "setup.py").resolve()
     if local_copy.is_file():
-        shutil.copy2(local_copy, BASE_DIR / "setup.py")
+        if local_copy != target:
+            shutil.copy2(local_copy, BASE_DIR / "setup.py")
     else:
         try:
             urllib.request.urlretrieve(SETUP_URL, BASE_DIR / "setup.py")
