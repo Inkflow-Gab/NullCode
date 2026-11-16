@@ -22,7 +22,7 @@ function readTheme(): string {
   return document.documentElement.getAttribute("data-theme") ?? ""
 }
 
-export function OlliecodeFxAmbient() {
+export function NullcodeFxAmbient() {
   const [theme, setTheme] = createSignal<string>(readTheme())
 
   onMount(() => {
@@ -42,29 +42,29 @@ export function OlliecodeFxAmbient() {
     <ErrorBoundary fallback={<></>}>
       <Portal mount={document.body}>
         <div
-          class="olliE-ambient pointer-events-none fixed inset-0 overflow-hidden"
+          class="nullcode-ambient pointer-events-none fixed inset-0 overflow-hidden"
           style={{ "z-index": "0", isolation: "isolate" }}
           aria-hidden="true"
         >
           <Show when={kit() === "frost"}>
-            <div class="olliE-orb olliE-orb-a" />
-            <div class="olliE-orb olliE-orb-b" />
-            <div class="olliE-orb olliE-orb-c" />
+            <div class="nullcode-orb nullcode-orb-a" />
+            <div class="nullcode-orb nullcode-orb-b" />
+            <div class="nullcode-orb nullcode-orb-c" />
           </Show>
           <Show when={kit() === "porcelain"}>
-            <div class="olliE-blob olliE-blob-a" />
-            <div class="olliE-blob olliE-blob-b" />
-            <div class="olliE-blob olliE-blob-c" />
+            <div class="nullcode-blob nullcode-blob-a" />
+            <div class="nullcode-blob nullcode-blob-b" />
+            <div class="nullcode-blob nullcode-blob-c" />
           </Show>
           <Show when={kit() === "prism"}>
-            <div class="olliE-aura olliE-aura-a" />
-            <div class="olliE-aura olliE-aura-b" />
+            <div class="nullcode-aura nullcode-aura-a" />
+            <div class="nullcode-aura nullcode-aura-b" />
           </Show>
           <Show when={kit() === "vapor"}>
-            <div class="olliE-sky" />
+            <div class="nullcode-sky" />
           </Show>
           <Show when={kit() === "obsidian"}>
-            <div class="olliE-grain" />
+            <div class="nullcode-grain" />
           </Show>
         </div>
       </Portal>

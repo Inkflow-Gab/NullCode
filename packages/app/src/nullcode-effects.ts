@@ -39,7 +39,7 @@ export function installEffects() {
   }
   const refresh = () => {
     clear()
-    const id = root.dataset.ollieTheme ?? "aurora"
+    const id = root.dataset.nullcodeTheme ?? "aurora"
     const animated = ANIMATED_THEMES.includes(id)
     const active = !document.hidden && document.hasFocus()
     root.toggleAttribute(

@@ -84,5 +84,6 @@
     "fuzzysort": "catalog:",
     "qr-scanner": "1.4.2",
     "solid-js": "catalog:"
-  }
+  },
+  "author": "Gab"
 }

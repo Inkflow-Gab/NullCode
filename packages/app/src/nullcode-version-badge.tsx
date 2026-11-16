@@ -24,7 +24,7 @@ function bridge(): Bridge | undefined {
   return electron?.nullcode
 }
 
-export function OlliecodeVersionBadge() {
+export function NullcodeVersionBadge() {
   const [version, setVersion] = createSignal<string | undefined>(undefined)
   const [copied, setCopied] = createSignal(false)
 

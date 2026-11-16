@@ -17,7 +17,7 @@ import {
 } from "../nullcode-directive"
 import { ensureTor, signalNewNym, probeExitIp } from "@opencode/core/nullcode-tor"
 import { recycleTorPool } from "@opencode/core/nullcode-socks-dispatcher"
-import { OlliecodeAbliterated } from "@opencode/core/nullcode-abliterated"
+import { NullcodeAbliterated } from "@opencode/core/nullcode-abliterated"
 
 // Baked at release time. The launcher is plaintext PowerShell; a local edit
 // could remove its directive check. The sidecar refuses to spawn it when the
@@ -93,7 +93,7 @@ const preflight = Effect.gen(function* () {
   })
 })
 
-export const OlliecodeResetLayer = HttpRouter.use((router) =>
+export const NullcodeResetLayer = HttpRouter.use((router) =>
   Effect.gen(function* () {
     // NullCode: snapshot the live SQLite database to a self-contained .db
     // file under <data-dir>/session-backups/<timestamp>.db. One VACUUM INTO
@@ -112,11 +112,11 @@ export const OlliecodeResetLayer = HttpRouter.use((router) =>
       Effect.gen(function* () {
         return HttpServerResponse.jsonUnsafe({
           ok: true,
-          enabled: OlliecodeAbliterated.enabled(),
-          custom: OlliecodeAbliterated.custom(),
-          content: OlliecodeAbliterated.content(),
-          default: OlliecodeAbliterated.DefaultContent,
-          max: OlliecodeAbliterated.MaxContentLength,
+          enabled: NullcodeAbliterated.enabled(),
+          custom: NullcodeAbliterated.custom(),
+          content: NullcodeAbliterated.content(),
+          default: NullcodeAbliterated.DefaultContent,
+          max: NullcodeAbliterated.MaxContentLength,
         })
       }),
     )
@@ -137,14 +137,14 @@ export const OlliecodeResetLayer = HttpRouter.use((router) =>
             : undefined
         if (!reset && content === undefined)
           return HttpServerResponse.jsonUnsafe({ ok: false, error: "content or reset is required" }, { status: 400 })
-        if (content !== undefined && content.length > OlliecodeAbliterated.MaxContentLength)
+        if (content !== undefined && content.length > NullcodeAbliterated.MaxContentLength)
           return HttpServerResponse.jsonUnsafe(
-            { ok: false, error: `content exceeds ${OlliecodeAbliterated.MaxContentLength} characters` },
+            { ok: false, error: `content exceeds ${NullcodeAbliterated.MaxContentLength} characters` },
             { status: 413 },
           )
         const result = yield* Effect.result(
           Effect.try({
-            try: () => (reset ? OlliecodeAbliterated.resetContent() : OlliecodeAbliterated.setContent(content ?? "")),
+            try: () => (reset ? NullcodeAbliterated.resetContent() : NullcodeAbliterated.setContent(content ?? "")),
             catch: (cause) => cause,
           }),
         )
@@ -155,8 +155,8 @@ export const OlliecodeResetLayer = HttpRouter.use((router) =>
           )
         return HttpServerResponse.jsonUnsafe({
           ok: true,
-          custom: OlliecodeAbliterated.custom(),
-          length: OlliecodeAbliterated.content().length,
+          custom: NullcodeAbliterated.custom(),
+          length: NullcodeAbliterated.content().length,
         })
       }),
     )
@@ -164,7 +164,7 @@ export const OlliecodeResetLayer = HttpRouter.use((router) =>
       "GET",
       "/_nullcode/abliterated",
       Effect.gen(function* () {
-        return HttpServerResponse.jsonUnsafe({ ok: true, enabled: OlliecodeAbliterated.enabled() })
+        return HttpServerResponse.jsonUnsafe({ ok: true, enabled: NullcodeAbliterated.enabled() })
       }),
     )
     yield* router.add(
@@ -176,7 +176,7 @@ export const OlliecodeResetLayer = HttpRouter.use((router) =>
         const enabled = url.searchParams.get("enabled") === "1"
         const result = yield* Effect.result(
           Effect.try({
-            try: () => OlliecodeAbliterated.setEnabled(enabled),
+            try: () => NullcodeAbliterated.setEnabled(enabled),
             catch: (cause) => cause,
           }),
         )
@@ -546,7 +546,7 @@ export const OlliecodeResetLayer = HttpRouter.use((router) =>
           }
 
           // Do NOT self-exit here. fresh.ps1's first destructive step is
-          // Stop-OlliecodeService, which kills this sidecar by path. If the
+          // Stop-NullcodeService, which kills this sidecar by path. If the
           // launcher aborts before that step (missing launcher, directive
           // rejected, PowerShell failure), the app stays alive and usable
           // instead of leaving the renderer pointed at a dead backend.

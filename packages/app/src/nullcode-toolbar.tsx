@@ -1,7 +1,7 @@
 import { useLanguage } from "./runtime/i18n/language"
 import { onCleanup, onMount, type ParentProps } from "solid-js"
 
-export function OlliecodeToolbar(props: ParentProps) {
+export function NullcodeToolbar(props: ParentProps) {
   const language = useLanguage()
   let element!: HTMLElement
   onMount(() => {

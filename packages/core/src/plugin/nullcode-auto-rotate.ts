@@ -1,4 +1,4 @@
-export * as OlliecodeAutoRotatePlugin from "./nullcode-auto-rotate.js"
+export * as NullcodeAutoRotatePlugin from "./nullcode-auto-rotate.js"
 
 import { define } from "@opencode/plugin/effect/plugin"
 import type { SessionHooks } from "@opencode/plugin/effect/session"
@@ -147,7 +147,7 @@ const QUOTA_BODY = /FreeUsageLimit|BudgetLimit|GoUsageLimit|usage limit|limit re
 
 export const Plugin = define({
   id: "nullcode.auto-rotate",
-  effect: Effect.fn("OlliecodeAutoRotatePlugin")(function* (ctx) {
+  effect: Effect.fn("NullcodeAutoRotatePlugin")(function* (ctx) {
     if (!ENABLED) return
     const warp = resolveWarpCli()
     // Even without WARP installed we still rotate the fingerprint — a fresh

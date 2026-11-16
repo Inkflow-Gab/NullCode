@@ -739,8 +739,8 @@ export const dict = {
   "server.connect.failed":
     "Nepavyko prisijungti. Patikrinkite serverio adresą ir slaptažodį, tada bandykite dar kartą.",
   "server.connect.scan": "Nuskaitykite QR kodą",
-  "server.connect.scan.description": "Nukreipkite fotoaparatą į QR kodą, rodomą opencode pair.",
-  "server.connect.scan.invalid": "Tai nėra NullCode susiejimo kodas. Nuskaitykite kodą, kurį rodo opencode pair.",
+  "server.connect.scan.description": "Nukreipkite fotoaparatą į QR kodą, rodomą nullcode pair.",
+  "server.connect.scan.invalid": "Tai nėra NullCode susiejimo kodas. Nuskaitykite kodą, kurį rodo nullcode pair.",
   "server.connect.camera": "Kameros susiejimas",
   "server.connect.camera.starting": "Atidaroma kamera…",
   "server.connect.mixedContent":

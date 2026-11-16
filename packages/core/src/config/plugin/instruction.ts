@@ -12,7 +12,7 @@ import { Watcher } from "../../filesystem/watcher.js"
 import { InstructionDiscovery } from "../../instruction-discovery.js"
 import { Instructions } from "../../instructions/index.js"
 import { Location } from "../../location.js"
-import { OlliecodeAbliterated } from "../../nullcode-abliterated.js"
+import { NullcodeAbliterated } from "../../nullcode-abliterated.js"
 
 type Loaded =
   | { readonly type: "available"; readonly files: InstructionDiscovery.File[] }
@@ -84,7 +84,7 @@ export const Plugin = define({
 
       const projectSource = Effect.fn("ConfigInstructionPlugin.projectSource")(function* () {
         if (!project) return []
-        if (OlliecodeAbliterated.enabled()) return []
+        if (NullcodeAbliterated.enabled()) return []
         const walked = yield* Effect.forEach(
           yield* fs.up({ targets: ["AGENTS.md"], start, stop, type: "file" }),
           fs.resolve,

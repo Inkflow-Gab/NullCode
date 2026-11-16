@@ -726,8 +726,8 @@ export const dict = {
   "server.connect.failed":
     "Nevarēja izveidot savienojumu. Pārbaudiet servera adresi un paroli, pēc tam mēģiniet vēlreiz.",
   "server.connect.scan": "Skenējiet QR kodu",
-  "server.connect.scan.description": "Pavērsiet kameru pret QR kodu, ko parāda opencode pair.",
-  "server.connect.scan.invalid": "Šis nav kods NullCode savienošanai pārī. Skenējiet kodu, ko parāda opencode pair.",
+  "server.connect.scan.description": "Pavērsiet kameru pret QR kodu, ko parāda nullcode pair.",
+  "server.connect.scan.invalid": "Šis nav kods NullCode savienošanai pārī. Skenējiet kodu, ko parāda nullcode pair.",
   "server.connect.camera": "Kameras savienošana pārī",
   "server.connect.camera.starting": "Tiek atvērta kamera…",
   "server.connect.mixedContent":

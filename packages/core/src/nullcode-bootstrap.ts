@@ -1,4 +1,4 @@
-export * as OlliecodeBootstrap from "./nullcode-bootstrap.js"
+export * as NullcodeBootstrap from "./nullcode-bootstrap.js"
 
 // Runs at CLI startup, BEFORE any effect/http layer loads. Replaces
 // globalThis.fetch with a routing function so every downstream consumer
@@ -61,7 +61,7 @@ function shouldRouteThroughTor(hostname: string): boolean {
           diag(`[bootstrap-fetch] routing ${host} through torFetch`)
           // Lazy-import torFetch so this file has no heavy deps at load time.
           const mod = await import("./nullcode-socks-dispatcher.js")
-          return (await mod.OlliecodeSocksDispatcher.torFetch(input, init)) as Response
+          return (await mod.NullcodeSocksDispatcher.torFetch(input, init)) as Response
         }
       } catch (e) {
         diag(`[bootstrap-fetch] ERROR: ${(e as Error).message}, falling through`)

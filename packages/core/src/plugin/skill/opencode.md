@@ -177,13 +177,13 @@ automatically. Restart it only if it is stuck or unhealthy, not to apply
 configuration changes:
 
 ```sh
-opencode service restart
+nullcode service restart
 ```
 
 Check its status after restarting:
 
 ```sh
-opencode service status
+nullcode service status
 ```
 
 ## [API](https://opencode.ai/docs/api)
@@ -253,7 +253,7 @@ Effect applications. For Cloudflare Durable Objects, use the
 OpenCode runs a client and a background server. Start by determining whether a
 problem belongs to the client, the shared server, or one project.
 
-- Check the service with `opencode service status` and verify the API with
+- Check the service with `nullcode service status` and verify the API with
   `opencode api get /api/info`.
 - Compare with `opencode --standalone`, which runs the TUI with a private
   server, to isolate shared-service issues.

@@ -53,7 +53,7 @@ function daysColour(days: number, expiresAt: number): { tone: string; label: str
   return { tone: "text-v2-green-500", label: `${days}d left` }
 }
 
-export function OlliecodeLicenseFab() {
+export function NullcodeLicenseFab() {
   const [status, setStatus] = createSignal<LicenseStatus | "loading">("loading")
   // revealed = full key fetched and shown inline. The key string lives in
   // this signal only while the eye is open; toggling off clears it so the

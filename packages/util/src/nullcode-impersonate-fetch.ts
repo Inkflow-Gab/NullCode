@@ -1,4 +1,4 @@
-export * as OlliecodeImpersonateFetch from "./nullcode-impersonate-fetch.js"
+export * as NullcodeImpersonateFetch from "./nullcode-impersonate-fetch.js"
 
 // NullCode TLS-fingerprint impersonation for opencode.ai.
 //

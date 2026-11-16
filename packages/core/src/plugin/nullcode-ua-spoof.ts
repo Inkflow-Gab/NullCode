@@ -1,4 +1,4 @@
-export * as OlliecodeUASpoofPlugin from "./nullcode-ua-spoof.js"
+export * as NullcodeUASpoofPlugin from "./nullcode-ua-spoof.js"
 
 import { define } from "@opencode/plugin/effect/plugin"
 import type { SessionHooks } from "@opencode/plugin/effect/session"
@@ -174,7 +174,7 @@ let loggedApplyFingerprint = ""
 
 export const Plugin = define({
   id: "nullcode.spoof.user-agent",
-  effect: Effect.fn("OlliecodeUASpoofPlugin")(function* (ctx) {
+  effect: Effect.fn("NullcodeUASpoofPlugin")(function* (ctx) {
     if (!loggedLoad) {
       loggedLoad = true
       yield* Effect.logInfo("nullcode-ua-spoof: plugin registered")

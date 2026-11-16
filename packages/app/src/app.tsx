@@ -1,7 +1,7 @@
 import "@/index.css"
 import "@/nullcode-studio.css"
-import { OlliecodeToolbar } from "@/nullcode-toolbar"
-import { OlliecodeThemeProvider } from "@/nullcode-theme-provider"
+import { NullcodeToolbar } from "@/nullcode-toolbar"
+import { NullcodeThemeProvider } from "@/nullcode-theme-provider"
 import { VoiceProvider } from "@/voice/context"
 import { VoiceOverlay } from "@/voice/composer"
 import { DialogProvider } from "@opencode/ui/context/dialog"
@@ -24,11 +24,11 @@ import { TabsProvider } from "@/shell/tabs/tabs"
 import { ErrorPage } from "@/shell/errors/error"
 import { AppRoutes, File, preloadRoute } from "@/shell/routes/routes"
 import { PluginRoot } from "@/runtime/plugin/root"
-import { OlliecodeResetFab, OlliecodeWebsiteFab } from "@/nullcode-reset-fab"
-import { OlliecodeLicenseFab } from "@/nullcode-license-fab"
-import { OlliecodeUpdateFab } from "@/nullcode-update-fab"
-import { OlliecodeVersionBadge } from "@/nullcode-version-badge"
-import { OlliecodeThemeFab } from "@/nullcode-theme-fab"
+import { NullcodeResetFab, NullcodeWebsiteFab } from "@/nullcode-reset-fab"
+import { NullcodeLicenseFab } from "@/nullcode-license-fab"
+import { NullcodeUpdateFab } from "@/nullcode-update-fab"
+import { NullcodeVersionBadge } from "@/nullcode-version-badge"
+import { NullcodeThemeFab } from "@/nullcode-theme-fab"
 import { FREE_EDITION } from "@/nullcode-edition"
 
 export { preloadRoute }
@@ -73,7 +73,7 @@ export function AppBaseProviders(
           props.onThemeApplied?.(mode, scheme)
         }}
       >
-        <OlliecodeThemeProvider />
+        <NullcodeThemeProvider />
         <LanguageProvider locale={props.locale} onNativeTranslations={props.onNativeTranslations}>
           <UiI18nBridge>
             <ErrorBoundary
@@ -118,14 +118,14 @@ export function AppInterface(props: {
               {props.children}
               {rootProps.children}
               <VoiceOverlay />
-              <OlliecodeToolbar>
-                {FREE_EDITION ? null : <OlliecodeResetFab />}
-                <OlliecodeWebsiteFab />
-                {FREE_EDITION ? null : <OlliecodeLicenseFab />}
-                <OlliecodeThemeFab />
-                <OlliecodeUpdateFab />
-              </OlliecodeToolbar>
-              <OlliecodeVersionBadge />
+              <NullcodeToolbar>
+                {FREE_EDITION ? null : <NullcodeResetFab />}
+                <NullcodeWebsiteFab />
+                {FREE_EDITION ? null : <NullcodeLicenseFab />}
+                <NullcodeThemeFab />
+                <NullcodeUpdateFab />
+              </NullcodeToolbar>
+              <NullcodeVersionBadge />
             </VoiceProvider>
           </CommandProvider>
         </ProjectIconsProvider>

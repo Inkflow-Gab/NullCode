@@ -35,7 +35,7 @@ function bridge(): Bridge | undefined {
 // process clears currentUpdate before quit).
 const ACK_KEY = "nullcode.update.ack.version"
 
-export function OlliecodeUpdateFab() {
+export function NullcodeUpdateFab() {
   const [info, setInfo] = createSignal<UpdateInfo | undefined>(undefined)
   const [installing, setInstalling] = createSignal(false)
   const [err, setErr] = createSignal<string | undefined>(undefined)

@@ -724,9 +724,9 @@ export const dict = {
   "server.connect.address.invalid": "შეიყვანეთ ვალიდური HTTP ან HTTPS სერვერის მისამართი.",
   "server.connect.failed": "ვერ მოხერხდა დაკავშირება. შეამოწმეთ სერვერის მისამართი და პაროლი, შემდეგ კვლავ სცადეთ.",
   "server.connect.scan": "სკანირება QR კოდით",
-  "server.connect.scan.description": "მიმართეთ კამერა opencode pair-ის მიერ ნაჩვენებ QR კოდზე.",
+  "server.connect.scan.description": "მიმართეთ კამერა nullcode pair-ის მიერ ნაჩვენებ QR კოდზე.",
   "server.connect.scan.invalid":
-    "ეს NullCode-ის დაწყვილების კოდი არ არის. დაასკანირეთ opencode pair-ის მიერ ნაჩვენები კოდი.",
+    "ეს NullCode-ის დაწყვილების კოდი არ არის. დაასკანირეთ nullcode pair-ის მიერ ნაჩვენები კოდი.",
   "server.connect.camera": "კამერასთან წყვილობა",
   "server.connect.camera.starting": "კამერის გახსნა…",
   "server.connect.mixedContent":

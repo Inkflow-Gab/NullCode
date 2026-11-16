@@ -25,7 +25,7 @@
 #ifndef AppVersion
   #define AppVersion "0.0.0-dev"
 #endif
-#define AppPublisher  "olliE"
+#define AppPublisher  "NullCode"
 #define AppURL        "https://discord.gg/example"
 ; The primary launcher is the direct-launch .vbs (fast path: ~5s to window).
 ; The Fresh-Desktop .vbs is still installed as a separate "NullCode Fresh

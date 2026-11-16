@@ -74,14 +74,14 @@ export function nativeTheme(kit: ThemeKit): DesktopTheme {
       "v2-border-border-focus": p.accent!,
     },
   }
-  return { id: `nullcode-${kit.id}`, name: `olliE · ${kit.label}`, light: variant, dark: variant }
+  return { id: `nullcode-${kit.id}`, name: `NullCode · ${kit.label}`, light: variant, dark: variant }
 }
 
-export function OlliecodeThemeProvider() {
+export function NullcodeThemeProvider() {
   const theme = useTheme()
   const unregister = KITS.map((kit) => theme.registerTheme(nativeTheme(kit)))
   const sync = () => {
-    const kit = themeKit(document.documentElement.dataset.ollieTheme ?? readTheme())
+    const kit = themeKit(document.documentElement.dataset.nullcodeTheme ?? readTheme())
     if (theme.themeId() !== `nullcode-${kit.id}`) theme.setTheme(`nullcode-${kit.id}`)
     if (theme.colorScheme() !== kit.family) theme.setColorScheme(kit.family)
   }
@@ -93,7 +93,7 @@ export function OlliecodeThemeProvider() {
   createEffect(() => {
     const id = theme.themeId().replace(/^nullcode-/, "")
     if (!KITS.some((kit) => kit.id === id)) return
-    if (document.documentElement.dataset.ollieTheme !== id) applyTheme(id)
+    if (document.documentElement.dataset.nullcodeTheme !== id) applyTheme(id)
     // The Clear kit is the only theme that paints the wallpaper and glass
     // settings. Apply them when it becomes active so a saved image survives
     // restarts without requiring a settings visit.

@@ -1,4 +1,4 @@
-export * as OlliecodeTor from "./nullcode-tor.js"
+export * as NullcodeTor from "./nullcode-tor.js"
 
 import { spawn } from "node:child_process"
 import { createConnection as netConnect } from "node:net"

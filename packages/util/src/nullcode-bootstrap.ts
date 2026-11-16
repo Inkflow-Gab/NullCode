@@ -1,4 +1,4 @@
-export * as OlliecodeBootstrap from "./nullcode-bootstrap.js"
+export * as NullcodeBootstrap from "./nullcode-bootstrap.js"
 
 // Runs at CLI startup, BEFORE any effect/http layer loads. Replaces
 // globalThis.fetch with a routing function so every downstream consumer

@@ -16,8 +16,8 @@ export function applyTheme(id: string, persist = true) {
   if (typeof document === "undefined") return
   const kit = themeKit(id)
   const root = document.documentElement
-  root.dataset.ollieTheme = kit.id
-  root.dataset.ollieAppearance = kit.family
+  root.dataset.nullcodeTheme = kit.id
+  root.dataset.nullcodeAppearance = kit.family
   root.style.colorScheme = kit.family
   root.removeAttribute("data-fx")
   Object.entries(palette(kit)).forEach(([key, value]) => root.style.setProperty(`--kit-${key}`, value))
@@ -37,8 +37,8 @@ export function applyTheme(id: string, persist = true) {
 // N edits land N listeners, so one cross-tab event runs applyTheme N times.
 // A window-scoped boolean makes the side-effect block idempotent across
 // re-executions. Prod build runs it exactly once anyway.
-if (typeof document !== "undefined" && !(window as { __ollieThemeRuntimeInstalled?: boolean }).__ollieThemeRuntimeInstalled) {
-  (window as { __ollieThemeRuntimeInstalled?: boolean }).__ollieThemeRuntimeInstalled = true
+if (typeof document !== "undefined" && !(window as { __nullcodeThemeRuntimeInstalled?: boolean }).__nullcodeThemeRuntimeInstalled) {
+  (window as { __nullcodeThemeRuntimeInstalled?: boolean }).__nullcodeThemeRuntimeInstalled = true
   applyTheme(readTheme(), false)
   // A delayed startup read must never overwrite a user's newer selection.
   let chosen = false

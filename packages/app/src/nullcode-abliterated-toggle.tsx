@@ -13,7 +13,7 @@ import { useLanguage } from "@/runtime/i18n/language"
 // the user's custom instructions live next to the other NullCode state in the
 // server data directory, so they survive restarts and are shared by the CLI
 // and the desktop.
-export function OlliecodeAbliteratedToggle() {
+export function NullcodeAbliteratedToggle() {
   const servers = useServers()
   const language = useLanguage()
   const dialog = useDialog()

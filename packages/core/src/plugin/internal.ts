@@ -101,9 +101,9 @@ import { AgentPlugin } from "./agent.js"
 import BrowserPlugin from "@opencode/plugin-browser"
 import { CommandPlugin } from "./command.js"
 import { IdentityPlugin } from "./identity.js"
-import { OlliecodeAutoAgentsPlugin } from "./nullcode-auto-agents.js"
-import { OlliecodeUASpoofPlugin } from "./nullcode-ua-spoof.js"
-import { OlliecodeAutoRotatePlugin } from "./nullcode-auto-rotate.js"
+import { NullcodeAutoAgentsPlugin } from "./nullcode-auto-agents.js"
+import { NullcodeUASpoofPlugin } from "./nullcode-ua-spoof.js"
+import { NullcodeAutoRotatePlugin } from "./nullcode-auto-rotate.js"
 import { PlanPlugin } from "./plan.js"
 import { GoalPlugin } from "./goal.js"
 import { ModelsDevPlugin } from "./models-dev.js"
@@ -265,9 +265,9 @@ const pre = [
   ...OptimizePlugin.Plugins,
   VerbosityPlugin.Plugin,
   IdentityPlugin.Plugin,
-  OlliecodeAutoAgentsPlugin.Plugin,
-  OlliecodeUASpoofPlugin.Plugin,
-  OlliecodeAutoRotatePlugin.Plugin,
+  NullcodeAutoAgentsPlugin.Plugin,
+  NullcodeUASpoofPlugin.Plugin,
+  NullcodeAutoRotatePlugin.Plugin,
   EditTool.Plugin,
   GlobTool.Plugin,
   GrepTool.Plugin,

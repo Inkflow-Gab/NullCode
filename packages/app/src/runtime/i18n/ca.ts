@@ -730,9 +730,9 @@ export const dict = {
   "server.connect.failed":
     "No s'ha pogut connectar. Comproveu l'adreça i la contrasenya del servidor i torneu-ho a provar.",
   "server.connect.scan": "Escaneja el codi QR",
-  "server.connect.scan.description": "Apunteu la càmera al codi QR que mostra opencode pair.",
+  "server.connect.scan.description": "Apunteu la càmera al codi QR que mostra nullcode pair.",
   "server.connect.scan.invalid":
-    "Aquest no és un codi d'aparellament NullCode. Escaneja el codi mostrat per opencode pair.",
+    "Aquest no és un codi d'aparellament NullCode. Escaneja el codi mostrat per nullcode pair.",
   "server.connect.camera": "Càmera d'aparellament",
   "server.connect.camera.starting": "Obertura de la càmera...",
   "server.connect.mixedContent":

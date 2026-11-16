@@ -6,7 +6,7 @@
   "license": "MIT",
   "homepage": "https://github.com/Inkflow-Gab/NullCode",
   "author": {
-    "name": "NullCode"
+    "name": "Gab"
   },
   "scripts": {
     "typecheck": "bun check --no-script -b",

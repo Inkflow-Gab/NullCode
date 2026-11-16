@@ -23,7 +23,7 @@ import { Loader } from "@opencode/ui/loader"
 import { ProviderModelIcon } from "@/providers/models/provider-group"
 import { useI18n } from "@opencode/ui/context/i18n"
 import { Button } from "@opencode/ui/button"
-import { OlliecodeAbliteratedToggle } from "@/nullcode-abliterated-toggle"
+import { NullcodeAbliteratedToggle } from "@/nullcode-abliterated-toggle"
 import { Keybind } from "@opencode/ui/keybind"
 import { Menu } from "@opencode/ui/menu"
 import { MenuScroll } from "@opencode/ui/menu-scroll"
@@ -487,7 +487,7 @@ export function ComposerEditor(props: ComposerEditorProps) {
                   )}
                 </Show>
               </Show>
-              <OlliecodeAbliteratedToggle />
+              <NullcodeAbliteratedToggle />
             </div>
           </div>
           <Show when={!touch()}>

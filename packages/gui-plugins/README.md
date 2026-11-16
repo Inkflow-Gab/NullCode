@@ -536,7 +536,7 @@ import en from "./i18n/en"
 export default Plugin.define({ i18n: { en } })
 ```
 
-3. **Provide it from main.** Whether main keeps the display awake is a main store, read synchronously and imported once from the key the desktop kept it under before; a built-in names that older home through `builtinMainContext`. Remote access runs `opencode service` through `ctx.cli`, one command at a time through the machine in `main-machine.ts`, with the same `createDispatch` loop as the settings page: a read stops when its caller goes away, a change goes on when the window closes, and every command has a timeout, so a hung one never holds the queue. `ctx.onCleanup` disposes the machine, which releases the blocker.
+3. **Provide it from main.** Whether main keeps the display awake is a main store, read synchronously and imported once from the key the desktop kept it under before; a built-in names that older home through `builtinMainContext`. Remote access runs `nullcode service` through `ctx.cli`, one command at a time through the machine in `main-machine.ts`, with the same `createDispatch` loop as the settings page: a read stops when its caller goes away, a change goes on when the window closes, and every command has a timeout, so a hung one never holds the queue. `ctx.onCleanup` disposes the machine, which releases the blocker.
 
 <!-- source: src/pairing/main.ts -->
 
@@ -621,7 +621,7 @@ const setup: Plugin.MainSetup = (ctx) => {
     }
 
     // Remote access is a setting of the background service, so it changes through the CLI the app runs, as with
-    // `opencode pair --remote`. A hung command ends at its timeout, so the next one always runs.
+    // `nullcode pair --remote`. A hung command ends at its timeout, so the next one always runs.
     const attempt = effect.attempt
     const controller = new AbortController()
 

@@ -1,4 +1,4 @@
-export * as OlliecodeSocksDispatcher from "./nullcode-socks-dispatcher.js"
+export * as NullcodeSocksDispatcher from "./nullcode-socks-dispatcher.js"
 
 import { openSocks5 } from "./nullcode-tor.js"
 import * as tlsMod from "node:tls"

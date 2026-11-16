@@ -55,7 +55,7 @@ function ThemeCard(props: { kit: ThemeKit; active: boolean; choose: () => void }
   )
 }
 
-export function OlliecodeThemeFab() {
+export function NullcodeThemeFab() {
   const language = useLanguage()
   const [state, set] = createStore({ active: readTheme(), query: "", family: "all", open: false, effects: readEffects() })
   let dialog!: HTMLDialogElement
@@ -73,11 +73,11 @@ export function OlliecodeThemeFab() {
     trigger.focus()
   }
   onMount(() => {
-    set("active", document.documentElement.dataset.ollieTheme ?? readTheme())
+    set("active", document.documentElement.dataset.nullcodeTheme ?? readTheme())
     // Re-read effects at mount in case they changed between createStore and
     // mount (another component's effect toggle, external storage event).
     set("effects", readEffects())
-    const sync = () => set("active", document.documentElement.dataset.ollieTheme ?? readTheme())
+    const sync = () => set("active", document.documentElement.dataset.nullcodeTheme ?? readTheme())
     // Effects can change from another tab (storage) or another in-tab caller
     // of saveEffects (nullcode:effects-changed). Without a listener here the
     // dialog's checkbox + select values go stale, and the next toggle writes

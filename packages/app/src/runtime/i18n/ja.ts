@@ -741,9 +741,9 @@ export const dict = {
   "server.connect.address.invalid": "有効なHTTPまたはHTTPSサーバーアドレスを入力してください。",
   "server.connect.failed": "接続できませんでした。サーバーアドレスとパスワードを確認して、もう一度お試しください。",
   "server.connect.scan": "QRコードをスキャン",
-  "server.connect.scan.description": "opencode pair に表示されたQRコードにカメラを向けてください。",
+  "server.connect.scan.description": "nullcode pair に表示されたQRコードにカメラを向けてください。",
   "server.connect.scan.invalid":
-    "これはNullCodeのペアリングコードではありません。opencode pair に表示されたコードをスキャンしてください。",
+    "これはNullCodeのペアリングコードではありません。nullcode pair に表示されたコードをスキャンしてください。",
   "server.connect.camera": "ペアリング用カメラ",
   "server.connect.camera.starting": "カメラを開いています…",
   "server.connect.mixedContent":

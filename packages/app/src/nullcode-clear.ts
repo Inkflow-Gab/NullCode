@@ -345,7 +345,7 @@ export function saveClear(settings: ClearSettings) {
   // The glass variables belong to the Clear kit. Saving a wallpaper while a
   // different theme is active must not overwrite that theme's accent or glass
   // tokens; the theme provider applies the saved values when Clear is chosen.
-  if (typeof document === "undefined" || document.documentElement.dataset.ollieTheme === "clear") {
+  if (typeof document === "undefined" || document.documentElement.dataset.nullcodeTheme === "clear") {
     applyClear(settings)
   }
 }

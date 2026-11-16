@@ -1,4 +1,4 @@
-export * as OlliecodeAbliterated from "./nullcode-abliterated.js"
+export * as NullcodeAbliterated from "./nullcode-abliterated.js"
 
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"

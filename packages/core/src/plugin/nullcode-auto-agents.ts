@@ -1,4 +1,4 @@
-export * as OlliecodeAutoAgentsPlugin from "./nullcode-auto-agents.js"
+export * as NullcodeAutoAgentsPlugin from "./nullcode-auto-agents.js"
 
 import { SystemPart } from "@opencode/ai/effect"
 import { define } from "@opencode/plugin/effect/plugin"
@@ -7,7 +7,7 @@ import { FSUtil } from "@opencode/util/fs-util"
 import { Effect } from "effect"
 import * as path from "node:path"
 import { Location } from "../location.js"
-import { OlliecodeAbliterated } from "../nullcode-abliterated.js"
+import { NullcodeAbliterated } from "../nullcode-abliterated.js"
 
 // NullCode auto-agents: re-reads AGENTS.md from the active workspace on every
 // model request and appends it to the system prompt. Belt-and-braces on top of
@@ -37,7 +37,7 @@ import { OlliecodeAbliterated } from "../nullcode-abliterated.js"
 
 export const Plugin = define({
   id: "nullcode.prompt.auto-agents",
-  effect: Effect.fn("OlliecodeAutoAgentsPlugin")(function* (ctx) {
+  effect: Effect.fn("NullcodeAutoAgentsPlugin")(function* (ctx) {
     const location = yield* Location.Service
     // FSUtil (not FileSystem): FSUtil.Service exposes readFileString / isFile
     // for absolute paths. FileSystem.Service is the higher-level location-scoped
@@ -51,8 +51,8 @@ export const Plugin = define({
         // readFileStringSafe returns undefined on NotFound / access-denied
         // instead of failing — exactly what we want so a missing AGENTS.md
         // never blocks a request.
-        const abliterated = OlliecodeAbliterated.enabled()
-        const content = abliterated ? OlliecodeAbliterated.content() : yield* fs.readFileStringSafe(file)
+        const abliterated = NullcodeAbliterated.enabled()
+        const content = abliterated ? NullcodeAbliterated.content() : yield* fs.readFileStringSafe(file)
         if (!content || !content.trim()) return
         if (abliterated) yield* Effect.logInfo("nullcode abliterated project AGENTS.md appended")
         const source = abliterated ? "builtin://nullcode/AGENTS.md" : file

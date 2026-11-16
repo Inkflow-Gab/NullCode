@@ -24,7 +24,7 @@ function openWebsite() {
   void bridge?.openWebsite?.()
 }
 
-export function OlliecodeWebsiteFab() {
+export function NullcodeWebsiteFab() {
   return (
     <button
       type="button"
@@ -77,7 +77,7 @@ export function OlliecodeWebsiteFab() {
 // with NULLCODE_FRESH_MODE=fast in the env; this window goes down ~500 ms
 // later as part of that script, so the pill shows a short "Resetting…"
 // state before the window dies and the new one takes its place.
-export function OlliecodeResetFab() {
+export function NullcodeResetFab() {
   const servers = useServers()
   const [licensed, setLicensed] = createSignal(false)
   onMount(() => {
