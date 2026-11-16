@@ -15,7 +15,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4.4
+          bun-version: latest
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -39,14 +39,10 @@ jobs:
       - name: Build web app
         run: bun --cwd packages/app build
 
-      - name: Add Capacitor Android deps
+      - name: Setup Capacitor Android
         run: |
           cd packages/app
           bun add -d @capacitor/cli@6 @capacitor/core@6 @capacitor/android@6
-
-      - name: Initialize Android project
-        run: |
-          cd packages/app
           if [ ! -d android ]; then
             npx cap add android
           fi
@@ -56,7 +52,7 @@ jobs:
         run: |
           cd packages/app/android
           chmod +x ./gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
