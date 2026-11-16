@@ -1,0 +1,63 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build web app
+        run: bun --cwd packages/app build
+
+      - name: Add Capacitor Android deps
+        run: |
+          cd packages/app
+          bun add -d @capacitor/cli@6 @capacitor/core@6 @capacitor/android@6
+
+      - name: Initialize Android project
+        run: |
+          cd packages/app
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+
+      - name: Build debug APK
+        run: |
+          cd packages/app/android
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NullCode-debug-apk
+          path: packages/app/android/app/build/outputs/apk/debug/*.apk
