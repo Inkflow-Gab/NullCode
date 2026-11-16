@@ -102,29 +102,45 @@ jobs:
           PROPS
           python3 - <<'PY'
           from pathlib import Path
+          import re
           p = Path('packages/app/android/app/build.gradle')
           s = p.read_text()
-          if 'keystoreProperties' not in s:
+          if 'keystorePropertiesFile' not in s:
               pre = "def keystoreProperties = new Properties()\n" \
                     "def keystorePropertiesFile = rootProject.file('keystore.properties')\n" \
                     "if (keystorePropertiesFile.exists()) {\n" \
                     "    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))\n" \
                     "}\n\n"
               s = s.replace('android {', pre + 'android {', 1)
-          if 'signingConfigs' not in s:
-              sig = "    signingConfigs {\n" \
-                    "        release {\n" \
-                    "            if (keystorePropertiesFile.exists()) {\n" \
-                    "                storeFile file(keystoreProperties['storeFile'])\n" \
-                    "                storePassword keystoreProperties['storePassword']\n" \
-                    "                keyAlias keystoreProperties['keyAlias']\n" \
-                    "                keyPassword keystoreProperties['keyPassword']\n" \
-                    "            }\n" \
-                    "        }\n" \
-                    "    }\n"
-              s = s.replace('    buildTypes {', sig + '    buildTypes {', 1)
-          if 'signingConfig signingConfigs.release' not in s:
-              s = s.replace('        release {', '        release {\n            if (keystorePropertiesFile.exists()) {\n                signingConfig signingConfigs.release\n            }', 1)
+
+          if 'signingConfigs' not in s.split('buildTypes',1)[0]:
+              sig = (
+                  "    signingConfigs {\n"
+                  "        release {\n"
+                  "            if (keystorePropertiesFile.exists()) {\n"
+                  "                storeFile file(keystoreProperties['storeFile'])\n"
+                  "                storePassword keystoreProperties['storePassword']\n"
+                  "                keyAlias keystoreProperties['keyAlias']\n"
+                  "                keyPassword keystoreProperties['keyPassword']\n"
+                  "            }\n"
+                  "        }\n"
+                  "    }\n\n"
+              )
+              s = s.replace('\n    buildTypes {', '\n' + sig + '    buildTypes {', 1)
+
+          # add signingConfig inside buildTypes.release only
+          bt = s.split('buildTypes {',1)
+          if len(bt)==2 and 'signingConfig signingConfigs.release' not in bt[1].split('release {',1)[-1]:
+              parts = s.split('buildTypes {',1)
+              before_bt = parts[0] + 'buildTypes {'
+              after_bt = parts[1]
+              # replace first "release {" inside buildTypes block
+              after_bt = after_bt.replace(
+                  '        release {',
+                  '        release {\n            if (keystorePropertiesFile.exists()) {\n                signingConfig signingConfigs.release\n            }',
+                  1
+              )
+              s = before_bt + after_bt
           p.write_text(s)
           print('gradle patched')
           PY
