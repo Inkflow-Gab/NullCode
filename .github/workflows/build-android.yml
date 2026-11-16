@@ -34,11 +34,22 @@ jobs:
           ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Install dependencies
+        id: install
+        continue-on-error: true
         run: |
           set -o pipefail
           bun --version
           rm -f bun.lock
           bun install --ignore-scripts 2>&1 | tee install.log
+          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+
+      - name: Show install log tail
+        if: always()
+        run: |
+          echo "----- install.log tail -----"
+          tail -n 200 install.log || true
+          echo "----- end -----"
+          exit ${{ steps.install.outputs.exit_code || 1 }}
 
       - name: Build web app
         run: |
