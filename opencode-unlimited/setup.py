@@ -1536,7 +1536,7 @@ esac
 
 UNLIMITED_SH = r"""#!/usr/bin/env bash
 # OpenCode UNLIMITED - starts the gateway and the OpenCode CLI together.
-# Run without arguments for the menu, or with start/stop/restart/status.
+# Run without arguments for the menu, or with start/stop/restart/status/pair.
 BASE_DIR="$HOME/.opencode-proxy"
 LOCAL_BIN="$HOME/.local/bin"
 SETUP="$BASE_DIR/setup.py"
@@ -1550,11 +1550,9 @@ NC='\033[0m'
 
 if [ ! -f "$SETUP" ]; then
     echo "setup.py is missing from $BASE_DIR"
-    echo "reinstall it with: curl -fsSL https://raw.githubusercontent.com/Inkflow-Gab/nullxOpenS/main/setup.py | python3"
     exit 1
 fi
 
-# Fall back to whatever is on PATH when the local copy is gone.
 if [ -x "$LOCAL_BIN/opencode-proxy" ]; then
     PROXY="$LOCAL_BIN/opencode-proxy"
 elif command -v opencode-proxy >/dev/null 2>&1; then
@@ -1572,37 +1570,29 @@ else
     CLI="$LOCAL_BIN/opencode"
 fi
 
-item() {
-    printf "  ${GREEN}%2s${NC}  %s\n" "$1" "$2"
-}
+item() { printf "  ${GREEN}%2s${NC}  %s\n" "$1" "$2"; }
+proxy_healthy() { curl -s "http://127.0.0.1:8080/healthz" >/dev/null 2>&1; }
+wait_for_proxy() { local i=0; while [ "$i" -lt 15 ]; do proxy_healthy && return 0; i=$((i+1)); sleep 1; done; return 1; }
+thinking_mode() { python3 "$SETUP" thinking status 2>/dev/null | grep 'thinking:' | head -1 | sed 's/^ *//'; }
+show_banner() { local title="$1"; echo; printf "  ${BOLD}${CYAN}%s${NC}  %s\n" "$title" "$(thinking_mode)"; printf "  ${DIM}api  http://127.0.0.1:8080/v1${NC}\n"; printf "  ${DIM}dash http://127.0.0.1:8081${NC}\n"; echo; }
 
-proxy_healthy() {
-    curl -s "http://127.0.0.1:8080/healthz" >/dev/null 2>&1
-}
-
-wait_for_proxy() {
-    local i=0
-    while [ "$i" -lt 15 ]; do
-        if proxy_healthy; then
-            return 0
-        fi
-        i=$((i + 1))
-        sleep 1
-    done
-    return 1
-}
-
-thinking_mode() {
-    python3 "$SETUP" thinking status 2>/dev/null | grep 'thinking:' | head -1 | sed 's/^ *//'
-}
-
-show_banner() {
-    local title="$1"
+pair_help() {
     echo
-    printf "  ${BOLD}${CYAN}%s${NC}  %s\n" "$title" "$(thinking_mode)"
-    printf "  ${DIM}api  http://127.0.0.1:8080/v1${NC}\n"
-    printf "  ${DIM}dash http://127.0.0.1:8081${NC}\n"
+    printf "  ${BOLD}${CYAN}Pairing${NC}\n"
     echo
+    echo "  This 'opencode-unlimited' tool is the proxy/CLI wrapper (no built-in NullCode pair server)."
+    echo "  To pair the NullCode Android app with a NullCode/OpenCode server:"
+    echo "    1) On the computer running the NullCode server, run:  nullcode pair"
+    echo "       (or: opencode pair / the server's Pairing menu) to get a link/QR."
+    echo "    2) Paste/scan that link in the app's Connect -> Pairing link."
+    echo "  If a local server is running on :4096 with pairing API, you can try:"
+    echo "    curl -sS -X POST http://127.0.0.1:4096/api/pair"
+    echo
+    if curl -sS -m 2 http://127.0.0.1:4096/global/health >/dev/null 2>&1; then
+        echo "  Detected server on :4096 - attempting /api/pair ..."
+        curl -sS -m 5 -X POST http://127.0.0.1:4096/api/pair || true
+        echo
+    fi
 }
 
 start_opencode() {
@@ -1615,11 +1605,7 @@ start_opencode() {
         fi
     fi
     show_banner "OpenCode UNLIMITED"
-    if [ "$cont" = "--continue" ]; then
-        exec "$CLI" --continue
-    else
-        exec "$CLI"
-    fi
+    if [ "$cont" = "--continue" ]; then exec "$CLI" --continue; else exec "$CLI"; fi
 }
 
 show_menu() {
@@ -1633,15 +1619,16 @@ show_menu() {
     item 3  "Stop the proxy and the CLI"
     item 4  "Restart the proxy and the CLI"
     item 5  "Status"
-    item 6  "Models"
-    item 7  "Thinking mode"
-    item 8  "Terminal font size"
-    item 9  "Fix DNS"
-    item 10 "Fix certificates"
-    item 11 "Auto start on boot"
-    item 12 "Doctor"
-    item 13 "Rate limit monitor"
-    item 14 "Repair the install"
+    item 6  "Pairing help"
+    item 7  "Models"
+    item 8  "Thinking mode"
+    item 9  "Terminal font size"
+    item 10 "Fix DNS"
+    item 11 "Fix certificates"
+    item 12 "Auto start on boot"
+    item 13 "Doctor"
+    item 14 "Rate limit monitor"
+    item 15 "Repair the install"
     item 0  "Quit"
     echo
     printf "  ${BOLD}pick a number:${NC} "
@@ -1663,45 +1650,96 @@ models_menu() {
 
 if [ $# -gt 0 ]; then
     case "$1" in
-        start)
-            start_opencode "${2:-}"
-            ;;
-        stop)
-            "$PROXY" stop
-            command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null
-            ;;
+        start) start_opencode "${2:-}" ;;
+        stop) "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null ;;
         restart)
-            "$PROXY" stop
-            command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null
-            sleep 1
-            "$PROXY" start
-            if wait_for_proxy; then
-                show_banner "OpenCode UNLIMITED"
-                exec "$CLI"
-            else
-                echo "  ${YELLOW}the proxy did not come up, check 'opencode-proxy logs'${NC}"
-                exit 1
-            fi
-            ;;
-        status)
-            "$PROXY" status
-            if command -v pgrep >/dev/null 2>&1 && pgrep -f "opencode-bin" >/dev/null 2>&1; then
-                printf "  ${GREEN}ok${NC}  OpenCode CLI is running\n"
-            else
-                printf "  ${DIM}xx  OpenCode CLI is stopped${NC}\n"
-            fi
-            ;;
-        install)
-            python3 "$SETUP" install
-            ;;
-        *)
-            echo "usage: opencode-unlimited {start [--continue]|stop|restart|status|install}"
-            echo "       run it without arguments for the menu"
-            exit 1
-            ;;
+            "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null; sleep 1; "$PROXY" start
+            if wait_for_proxy; then show_banner "OpenCode UNLIMITED"; exec "$CLI"; else echo "proxy did not come up"; exit 1; fi ;;
+        status) "$PROXY" status; if command -v pgrep >/dev/null 2>&1 && pgrep -f "opencode-bin" >/dev/null 2>&1; then printf "  ${GREEN}ok${NC}  OpenCode CLI is running\n"; else printf "  ${DIM}xx  OpenCode CLI is stopped${NC}\n"; fi ;;
+        pair|connect) pair_help ;;
+        install) python3 "$SETUP" install ;;
+        *) echo "usage: opencode-unlimited {start [--continue]|stop|restart|status|pair|install}"; echo "       run it without arguments for the menu"; exit 1 ;;
     esac
     exit 0
 fi
+
+while true; do
+    show_menu
+    read -r choice
+    case "$choice" in
+        1) start_opencode ""; exit 0 ;;
+        2) start_opencode "--continue"; exit 0 ;;
+        3) "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null ;;
+        4) "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null; sleep 1; "$PROXY" start ;;
+        5) "$PROXY" status ;;
+        6) pair_help ;;
+        7)
+            while true; do
+                models_menu
+                read -r model_choice
+                case "$model_choice" in
+                    1) "$PROXY" models list ;;
+                    2) "$PROXY" models best ;;
+                    3) read -r -p "  ${BOLD}model id:${NC} " name; "$PROXY" model "$name" ;;
+                    4) read -r -p "  ${BOLD}model id:${NC} " name; "$PROXY" bench "$name" ;;
+                    0) break ;;
+                    *) echo "  unknown option" ;;
+                esac
+                read -r -p "  ${DIM}press enter to go back...${NC} " _
+            done
+            ;;
+        8)
+            echo
+            printf "  ${BOLD}${CYAN}Thinking mode${NC}  %s\n" "$(thinking_mode)"
+            echo
+            item 1 "Status"; item 2 "low"; item 3 "medium"; item 4 "high"; item 5 "max"; item 6 "off"; item 0 "Back"
+            echo
+            printf "  ${BOLD}pick a number:${NC} "; read -r think_choice
+            case "$think_choice" in
+                1) "$PROXY" thinking status ;;
+                2) "$PROXY" thinking low ;;
+                3) "$PROXY" thinking medium ;;
+                4) "$PROXY" thinking high ;;
+                5) "$PROXY" thinking max ;;
+                6) "$PROXY" thinking none ;;
+            esac
+            ;;
+        9)
+            echo
+            printf "  ${BOLD}${CYAN}Terminal font size${NC}\n"
+            echo
+            item 1 "Bigger"; item 2 "Smaller"; item 3 "Reset"; item 0 "Back"
+            echo
+            printf "  ${BOLD}pick a number:${NC} "; read -r zoom_choice
+            case "$zoom_choice" in
+                1) "$PROXY" zoom-in ;;
+                2) "$PROXY" zoom-out ;;
+                3) "$PROXY" zoom-reset ;;
+            esac
+            ;;
+        10) "$PROXY" fix-dns ;;
+        11) "$PROXY" fix-certs ;;
+        12)
+            echo
+            printf "  ${BOLD}${CYAN}Auto start on boot${NC}\n"
+            echo
+            item 1 "Status"; item 2 "Enable"; item 3 "Disable"; item 0 "Back"
+            echo
+            printf "  ${BOLD}pick a number:${NC} "; read -r boot_choice
+            case "$boot_choice" in
+                1) "$PROXY" autostart status ;;
+                2) "$PROXY" autostart enable ;;
+                3) "$PROXY" autostart disable ;;
+            esac
+            ;;
+        13) "$PROXY" doctor ;;
+        14) "$PROXY" rate-limit ;;
+        15) python3 "$SETUP" repair ;;
+        0) exit 0 ;;
+        *) echo "  unknown option" ;;
+    esac
+    read -r -p "  ${DIM}press enter to go back...${NC} " _
+done
 
 while true; do
     show_menu
