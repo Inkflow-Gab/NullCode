@@ -143,7 +143,20 @@ export function ConnectServerScreen(props: { url?: string } = {}) {
           <Show when={view().draft.method === "link"}>
             <footer>
               <p>{language.t("server.connect.pair.link")}</p>
-              <code dir="ltr">nullcode pair</code>
+              <button
+                type="button"
+                class="server-connect-copy"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText("nullcode pair")
+                  } catch {}
+                }}
+                title="Tap to copy"
+                aria-label="Copy pairing command"
+              >
+                <code dir="ltr">nullcode pair</code>
+              </button>
+              <p class="server-connect-hint">If nothing happens on your phone: this must be run on the server computer, then paste/scan the link it shows here.</p>
             </footer>
           </Show>
         </Show>

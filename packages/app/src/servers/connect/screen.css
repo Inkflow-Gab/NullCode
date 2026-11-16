@@ -106,3 +106,17 @@
     user-select: all;
   }
 }
+
+
+.server-connect-copy {
+  appearance: none;
+  border: 1px solid var(--v2-border-border-base, rgba(128,128,128,.25));
+  background: var(--v2-background-bg-layer-02, transparent);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: 6px 0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.server-connect-copy code { user-select: all; }

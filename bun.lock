@@ -111,7 +111,7 @@
       "bin": {
         "opencode": "./bin/opencode.cjs",
         "opencode2": "./bin/opencode2.cjs",
-        "olliecode": "./bin/olliecode.cjs",
+        "nullcode": "./bin/nullcode.cjs",
       },
       "dependencies": {
         "@agentclientprotocol/sdk": "1.6.0",
