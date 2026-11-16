@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# OpenCode UNLIMITED - starts the gateway and the OpenCode CLI together.
+# Run without arguments for the menu, or with start/stop/restart/status/pair.
+BASE_DIR="$HOME/.opencode-proxy"
+LOCAL_BIN="$HOME/.local/bin"
+SETUP="$BASE_DIR/setup.py"
+
+BOLD='\033[1m'
+DIM='\033[2m'
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+if [ ! -f "$SETUP" ]; then
+    echo "setup.py is missing from $BASE_DIR"
+    echo "reinstall it with: curl -fsSL https://raw.githubusercontent.com/Inkflow-Gab/nullxOpenS/main/setup.py | python3"
+    exit 1
+fi
+
+if [ -x "$LOCAL_BIN/opencode-proxy" ]; then
+    PROXY="$LOCAL_BIN/opencode-proxy"
+elif command -v opencode-proxy >/dev/null 2>&1; then
+    PROXY="$(command -v opencode-proxy)"
+else
+    echo "the opencode-proxy command is missing, run: opencode-proxy repair"
+    exit 1
+fi
+
+if [ -x "$LOCAL_BIN/opencode" ]; then
+    CLI="$LOCAL_BIN/opencode"
+elif command -v opencode >/dev/null 2>&1; then
+    CLI="$(command -v opencode)"
+else
+    CLI="$LOCAL_BIN/opencode"
+fi
+
+item() { printf "  ${GREEN}%2s${NC}  %s\n" "$1" "$2"; }
+proxy_healthy() { curl -s "http://127.0.0.1:8080/healthz" >/dev/null 2>&1; }
+wait_for_proxy() { local i=0; while [ "$i" -lt 15 ]; do proxy_healthy && return 0; i=$((i+1)); sleep 1; done; return 1; }
+thinking_mode() { python3 "$SETUP" thinking status 2>/dev/null | grep 'thinking:' | head -1 | sed 's/^ *//'; }
+show_banner() { local title="$1"; echo; printf "  ${BOLD}${CYAN}%s${NC}  %s\n" "$title" "$(thinking_mode)"; printf "  ${DIM}api  http://127.0.0.1:8080/v1${NC}\n"; printf "  ${DIM}dash http://127.0.0.1:8081${NC}\n"; echo; }
+
+start_opencode() {
+    local cont="$1"
+    if ! proxy_healthy; then
+        "$PROXY" start
+        if ! wait_for_proxy; then
+            echo "  ${YELLOW}the proxy did not come up, check 'opencode-proxy logs'${NC}"
+            return 1
+        fi
+    fi
+    show_banner "OpenCode UNLIMITED"
+    if [ "$cont" = "--continue" ]; then exec "$CLI" --continue; else exec "$CLI"; fi
+}
+
+pair_help() {
+    echo
+    printf "  ${BOLD}${CYAN}Pairing${NC}\n"
+    echo
+    echo "  This 'opencode-unlimited' tool is the proxy/CLI wrapper (no built-in NullCode pair server)."
+    echo "  To pair the NullCode Android app with a NullCode/OpenCode server:"
+    echo "    1) On the computer running the NullCode server, run:  nullcode pair"
+    echo "       (or: opencode pair / the server's Pairing menu) to get a link/QR."
+    echo "    2) Paste/scan that link in the app's Connect → Pairing link."
+    echo "  If a local server is running on :4096 with pairing API, you can try:"
+    echo "    curl -sS -X POST http://127.0.0.1:4096/api/pair"
+    echo
+    if curl -sS -m 2 http://127.0.0.1:4096/global/health >/dev/null 2>&1; then
+        echo "  Detected server on :4096 — attempting /api/pair ..."
+        curl -sS -m 5 -X POST http://127.0.0.1:4096/api/pair || true
+        echo
+    fi
+}
+
+if [ $# -gt 0 ]; then
+    case "$1" in
+        start) start_opencode "${2:-}" ;;
+        stop) "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null ;;
+        restart)
+            "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null; sleep 1; "$PROXY" start
+            if wait_for_proxy; then show_banner "OpenCode UNLIMITED"; exec "$CLI"; else echo "proxy did not come up"; exit 1; fi ;;
+        status) "$PROXY" status; if command -v pgrep >/dev/null 2>&1 && pgrep -f "opencode-bin" >/dev/null 2>&1; then printf "  ${GREEN}ok${NC}  OpenCode CLI is running\n"; else printf "  ${DIM}xx  OpenCode CLI is stopped${NC}\n"; fi ;;
+        pair|connect) pair_help ;;
+        install) python3 "$SETUP" install ;;
+        *) echo "usage: opencode-unlimited {start [--continue]|stop|restart|status|pair|install}"; exit 1 ;;
+    esac
+    exit 0
+fi
+
+# simple menu fallback
+echo
+printf "  ${BOLD}${CYAN}OpenCode UNLIMITED${NC}\n"
+item 1 "Start"; item 2 "Start and resume"; item 3 "Stop"; item 4 "Restart"; item 5 "Status"; item 6 "Pairing help"; item 0 "Quit"
+printf "  ${BOLD}pick a number:${NC} "; read -r choice
+case "$choice" in
+  1) start_opencode "" ;;
+  2) start_opencode "--continue" ;;
+  3) "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null ;;
+  4) "$PROXY" stop; command -v pkill >/dev/null 2>&1 && pkill -f "opencode-bin" 2>/dev/null; sleep 1; "$PROXY" start ;;
+  5) "$PROXY" status ;;
+  6) pair_help ;;
+  *) ;;
+esac

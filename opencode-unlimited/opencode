@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# OpenCode CLI wrapper. Passes every argument through to opencode-bin and
+# prints the current thinking mode before handing over.
+BOLD='\033[1m'
+DIM='\033[2m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+THINKING_MODE="$(python3 "$HOME/.opencode-proxy/setup.py" thinking status 2>/dev/null | grep 'thinking:' | head -1 | sed 's/^ *//')"
+echo
+printf "  ${BOLD}${CYAN}OpenCode UNLIMITED${NC}  %s
+" "${THINKING_MODE:-thinking: off}"
+printf "  ${DIM}api  http://127.0.0.1:8080/v1${NC}
+"
+echo
+exec "/root/.local/bin/opencode-bin" "$@"
