@@ -28,7 +28,7 @@ export function createWebPlatform(version: string) {
 
       const notification = new Notification(title, {
         body: description ?? "",
-        icon: "https://opencode.ai/favicon-96x96-v3.png",
+        icon: "/favicon-96x96-v3.png",
       })
 
       notification.onclick = () => {
@@ -47,6 +47,10 @@ export function createWebPlatform(version: string) {
 
 function getCurrentServerUrl() {
   if (import.meta.env.VITE_OPENCODE_SERVER_MODE === "none") return undefined
+
+  const cap = typeof window !== "undefined" && !!(window as any).Capacitor?.isNativePlatform?.()
+  const proto = typeof location !== "undefined" ? location.protocol : ""
+  if (cap || proto === "capacitor:" || proto === "file:") return undefined
 
   if (import.meta.env.DEV) {
     const loopback =
