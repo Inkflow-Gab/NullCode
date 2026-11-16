@@ -67,45 +67,26 @@ jobs:
 
       - name: Apply app icon
         run: |
-          set -euo pipefail
+          set -euxo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
           ICON="packages/app/resources/icon.jpg"
           RES="packages/app/android/app/src/main/res"
-          declare -A sizes=( [mipmap-mdpi]=48 [mipmap-hdpi]=72 [mipmap-xhdpi]=96 [mipmap-xxhdpi]=144 [mipmap-xxxhdpi]=192 )
-          for dir in "${!sizes[@]}"; do
-            size=${sizes[$dir]}
+          test -f "$ICON"
+          test -d "$RES"
+          for spec in "mipmap-mdpi:48" "mipmap-hdpi:72" "mipmap-xhdpi:96" "mipmap-xxhdpi:144" "mipmap-xxxhdpi:192"; do
+            dir="${spec%%:*}"
+            size="${spec##*:}"
             mkdir -p "$RES/$dir"
-            ffmpeg -y -loglevel error -i "$ICON" -vf "scale=${size}:${size}:force_original_aspect_ratio=increase,crop=${size}:${size}" "$RES/$dir/ic_launcher.png"
-            ffmpeg -y -loglevel error -i "$ICON" -vf "scale=${size}:${size}:force_original_aspect_ratio=increase,crop=${size}:${size}" "$RES/$dir/ic_launcher_round.png"
-            ffmpeg -y -loglevel error -i "$ICON" -vf "scale=${size}:${size}:force_original_aspect_ratio=increase,crop=${size}:${size}" "$RES/$dir/ic_launcher_foreground.png"
+            ffmpeg -y -i "$ICON" -vf "scale=${size}:${size}:force_original_aspect_ratio=increase,crop=${size}:${size}" "$RES/$dir/ic_launcher.png"
+            ffmpeg -y -i "$ICON" -vf "scale=${size}:${size}:force_original_aspect_ratio=increase,crop=${size}:${size}" "$RES/$dir/ic_launcher_round.png"
+            ffmpeg -y -i "$ICON" -vf "scale=${size}:${size}:force_original_aspect_ratio=increase,crop=${size}:${size}" "$RES/$dir/ic_launcher_foreground.png"
           done
-          mkdir -p "$RES/drawable-v24" "$RES/values"
-          cat > "$RES/drawable-v24/ic_launcher_foreground.xml" <<'XML'
-          <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-              android:gravity="center"
-              android:src="@mipmap/ic_launcher_foreground" />
-          XML
-          cat > "$RES/values/ic_launcher_background.xml" <<'XML'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <color name="ic_launcher_background">#000000</color>
-          </resources>
-          XML
-          if [ -f "$RES/mipmap-anydpi-v26/ic_launcher.xml" ]; then
-            cat > "$RES/mipmap-anydpi-v26/ic_launcher.xml" <<'XML'
-          <?xml version="1.0" encoding="utf-8"?>
-          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-              <background android:drawable="@color/ic_launcher_background"/>
-              <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
-          </adaptive-icon>
-          XML
-            cat > "$RES/mipmap-anydpi-v26/ic_launcher_round.xml" <<'XML'
-          <?xml version="1.0" encoding="utf-8"?>
-          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-              <background android:drawable="@color/ic_launcher_background"/>
-              <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
-          </adaptive-icon>
-          XML
-          fi
+          mkdir -p "$RES/drawable-v24" "$RES/values" "$RES/mipmap-anydpi-v26"
+          printf '%s\n' '<bitmap xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center" android:src="@mipmap/ic_launcher_foreground" />' > "$RES/drawable-v24/ic_launcher_foreground.xml"
+          printf '%s\n' '<?xml version="1.0" encoding="utf-8"?>' '<resources>' '    <color name="ic_launcher_background">#000000</color>' '</resources>' > "$RES/values/ic_launcher_background.xml"
+          printf '%s\n' '<?xml version="1.0" encoding="utf-8"?>' '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">' '    <background android:drawable="@color/ic_launcher_background"/>' '    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>' '</adaptive-icon>' > "$RES/mipmap-anydpi-v26/ic_launcher.xml"
+          printf '%s\n' '<?xml version="1.0" encoding="utf-8"?>' '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">' '    <background android:drawable="@color/ic_launcher_background"/>' '    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>' '</adaptive-icon>' > "$RES/mipmap-anydpi-v26/ic_launcher_round.xml"
           cd packages/app
           npx cap sync android 2>&1 | tee ../../cap-sync.log
 
