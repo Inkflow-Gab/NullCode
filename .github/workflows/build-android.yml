@@ -95,7 +95,7 @@ jobs:
           set -euo pipefail
           cp keystore/nullcode-release.keystore packages/app/android/app/nullcode-release.keystore
           cat > packages/app/android/keystore.properties <<'PROPS'
-          storeFile=app/nullcode-release.keystore
+          storeFile=nullcode-release.keystore
           storePassword=nullcode123
           keyAlias=nullcode
           keyPassword=nullcode123
